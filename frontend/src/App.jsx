@@ -6,6 +6,8 @@ import Payroll from './pages/Payroll'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
 import api from './services/api'
+import { NotificationProvider } from './contexts/NotificationContext'
+import NotificationBadges from './components/NotificationBadges'
 
 function Nav(){
   const navigate = useNavigate()
@@ -34,8 +36,9 @@ function Nav(){
 
 export default function App(){
   return (
-    <>
+    <NotificationProvider>
       <Nav/>
+      <NotificationBadges/>
       <div className="container">
         <Routes>
           <Route path="/" element={<Dashboard/>}/>
@@ -46,6 +49,6 @@ export default function App(){
         </Routes>
         <footer>© {new Date().getFullYear()} Demo payroll platform, ADP-like theme for educational use.</footer>
       </div>
-    </>
+    </NotificationProvider>
   )
 }
