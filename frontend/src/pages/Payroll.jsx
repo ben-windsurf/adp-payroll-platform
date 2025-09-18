@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import api from '../services/api'
+import { useNotifications } from '../contexts/NotificationContext'
 
 export default function Payroll(){
   const [employees, setEmployees] = useState([])
   const [runs, setRuns] = useState([])
   const [period, setPeriod] = useState('BIWEEKLY')
+  const { addNotification } = useNotifications()
 
   const load = ()=>{
     api.get('/employees').then(r=>setEmployees(r.data))
@@ -15,6 +17,12 @@ export default function Payroll(){
   const runPayroll = async ()=>{
     const res = await api.post('/payroll/run', {period})
     setRuns(res.data)
+    
+    const latestRun = res.data[res.data.length - 1]
+    addNotification({
+      type: 'success',
+      message: `Payroll completed! $${latestRun.net.toFixed(2)} net pay for ${latestRun.stubs.length} employees`
+    })
   }
 
   return (
